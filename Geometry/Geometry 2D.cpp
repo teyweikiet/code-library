@@ -154,7 +154,7 @@ double dist_from_point_to_seg(PT a, PT b, PT c) {
     return dist(c, project_from_point_to_seg(a, b, c));
 }
 // 0 if not parallel, 1 if parallel, 2 if collinear
-bool is_parallel(PT a, PT b, PT c, PT d) {
+int is_parallel(PT a, PT b, PT c, PT d) {
     double k = fabs(cross(b - a, d - c));
     if (k < eps){
         if (fabs(cross(a - b, a - c)) < eps && fabs(cross(c - d, c - a)) < eps) return 2;
@@ -1098,7 +1098,7 @@ double polygon_circle_intersection(vector<PT> &v, PT p, double r) {
         if (x < 0) ans -= area;
         else ans += area;
     }
-    return ans * 0.5;
+    return abs(ans);
 }
 // find a circle of radius r that contains as many points as possible
 // O(n^2 log n);
@@ -1120,7 +1120,7 @@ double maximum_circle_cover(vector<PT> p, double r, circle &c) {
             if (st <= -PI) st += PI * 2;
             if (ed > PI) ed -= PI * 2;
             if (ed <= -PI) ed += PI * 2;
-            events.push_back({st, +1});
+            events.push_back({st - eps, +1}); // take care of precisions!
             events.push_back({ed, -1});
             if (st > ed) {
                 events.push_back({-PI, +1});
